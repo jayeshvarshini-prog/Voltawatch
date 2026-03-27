@@ -8,6 +8,7 @@ const config: Config = {
     '^.+\\.ts$': 'ts-jest',
   },
   testEnvironment: 'node',
+  setupFiles: ['<rootDir>/test/setup-env.ts'],
   moduleNameMapper: {
     '^@voltawatch/shared$': '<rootDir>/../packages/shared/src',
   },

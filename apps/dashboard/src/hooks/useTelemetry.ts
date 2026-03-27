@@ -51,7 +51,7 @@ export function useTelemetry(carId: string | null, token: string | null) {
           const reading = msg.data as TelemetryReading;
           if (reading.carId === carId) {
             setLatest(reading);
-            setHistory(prev => {
+            setHistory((prev) => {
               const updated = [...prev, reading];
               return updated.slice(-50);
             });

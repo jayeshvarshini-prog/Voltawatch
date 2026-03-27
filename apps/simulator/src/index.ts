@@ -2,11 +2,12 @@ import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core'
 import fetch from 'cross-fetch';
 import { generateReading } from './generator';
 
-const endpoint = process.argv.find(a => a.startsWith('--endpoint='))?.split('=')[1]
-  || 'http://localhost:5000/graphql';
+const endpoint =
+  process.argv.find((a) => a.startsWith('--endpoint='))?.split('=')[1] ||
+  'http://localhost:5000/graphql';
 
 const interval = parseInt(
-  process.argv.find(a => a.startsWith('--interval='))?.split('=')[1] || '30000',
+  process.argv.find((a) => a.startsWith('--interval='))?.split('=')[1] || '30000',
   10,
 );
 
@@ -53,7 +54,7 @@ async function run() {
   }
 
   console.log(`Found ${cars.length} cars:`);
-  cars.forEach(c => console.log(`  - ${c.model} (${c.id.slice(0, 8)}...)`));
+  cars.forEach((c) => console.log(`  - ${c.model} (${c.id.slice(0, 8)}...)`));
   console.log('');
   console.log('Sending telemetry readings...');
   console.log('');
@@ -82,7 +83,7 @@ async function sendReadings(cars: { id: string; model: string }[]) {
 
       console.log(
         `[${new Date().toISOString()}] ${car.model}: ` +
-        `${status} | Battery: ${r.batteryPercentage}% | Speed: ${Math.round(r.speedKmh)} km/h${faults}`
+          `${status} | Battery: ${r.batteryPercentage}% | Speed: ${Math.round(r.speedKmh)} km/h${faults}`,
       );
     } catch (err: any) {
       console.error(`[${new Date().toISOString()}] Failed for ${car.model}: ${err.message}`);

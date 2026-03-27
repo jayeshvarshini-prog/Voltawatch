@@ -26,10 +26,7 @@ describe('CarsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CarsService,
-        { provide: DATABASE_POOL, useValue: mockPool },
-      ],
+      providers: [CarsService, { provide: DATABASE_POOL, useValue: mockPool }],
     }).compile();
 
     service = module.get<CarsService>(CarsService);

@@ -21,7 +21,7 @@ export class AuthService {
     const hash = await bcrypt.hash(password, 10);
     const result = await this.pool.query(
       'INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id, email, name',
-      [email, hash, name]
+      [email, hash, name],
     );
     return this.generateTokens(result.rows[0]);
   }
@@ -46,10 +46,9 @@ export class AuthService {
       const payload = this.jwtService.verify(token, {
         secret: process.env.JWT_REFRESH_SECRET || 'voltawatch-refresh-secret',
       });
-      const result = await this.pool.query(
-        'SELECT id, email, name FROM users WHERE id = $1',
-        [payload.sub]
-      );
+      const result = await this.pool.query('SELECT id, email, name FROM users WHERE id = $1', [
+        payload.sub,
+      ]);
       if (!result.rows[0]) {
         throw new UnauthorizedException('User not found');
       }

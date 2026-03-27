@@ -84,29 +84,17 @@ export class CarsService {
   }
 
   async createCar(input: any, token: string) {
-    const data = await this.graphqlClient.mutateWithAuth(
-      REGISTER_CAR_MUTATION,
-      { input },
-      token,
-    );
+    const data = await this.graphqlClient.mutateWithAuth(REGISTER_CAR_MUTATION, { input }, token);
     return data.registerCar;
   }
 
   async updateCar(id: string, input: any, token: string) {
-    const data = await this.graphqlClient.mutateWithAuth(
-      UPDATE_CAR_MUTATION,
-      { id, input },
-      token,
-    );
+    const data = await this.graphqlClient.mutateWithAuth(UPDATE_CAR_MUTATION, { id, input }, token);
     return data.updateCar;
   }
 
   async deleteCar(id: string, token: string) {
-    const data = await this.graphqlClient.mutateWithAuth(
-      DELETE_CAR_MUTATION,
-      { id },
-      token,
-    );
+    const data = await this.graphqlClient.mutateWithAuth(DELETE_CAR_MUTATION, { id }, token);
     return data.deleteCar;
   }
 }

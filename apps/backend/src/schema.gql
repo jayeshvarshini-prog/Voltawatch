@@ -38,11 +38,11 @@ type CarEntity {
 }
 
 input CreateCarInput {
-  batteryHealthPercentage: Float! = 100
+  batteryHealthPercentage: Float = 100
   currentMileage: Int!
   estimatedRangeKm: Int!
   model: String!
-  ownerId: String!
+  ownerId: String
   vin: String!
   year: Int!
 }

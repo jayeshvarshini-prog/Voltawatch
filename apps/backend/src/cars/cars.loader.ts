@@ -11,21 +11,20 @@ export class CarsLoader {
 
   constructor(@Inject(DATABASE_POOL) private readonly pool: Pool) {
     this.byId = new DataLoader<string, CarEntity | null>(async (ids) => {
-      const result = await this.pool.query(
-        'SELECT * FROM cars WHERE id = ANY($1)',
-        [ids as string[]]
-      );
+      const result = await this.pool.query('SELECT * FROM cars WHERE id = ANY($1)', [
+        ids as string[],
+      ]);
       const map = new Map<string, CarEntity>();
       for (const row of result.rows) {
         map.set(row.id, this.mapToCar(row));
       }
-      return ids.map(id => map.get(id) ?? null);
+      return ids.map((id) => map.get(id) ?? null);
     });
 
     this.byOwnerId = new DataLoader<string, CarEntity[]>(async (ownerIds) => {
       const result = await this.pool.query(
         'SELECT * FROM cars WHERE owner_id = ANY($1) ORDER BY created_at DESC',
-        [ownerIds as string[]]
+        [ownerIds as string[]],
       );
       const map = new Map<string, CarEntity[]>();
       for (const row of result.rows) {
@@ -33,7 +32,7 @@ export class CarsLoader {
         cars.push(this.mapToCar(row));
         map.set(row.owner_id, cars);
       }
-      return ownerIds.map(id => map.get(id) ?? []);
+      return ownerIds.map((id) => map.get(id) ?? []);
     });
   }
 

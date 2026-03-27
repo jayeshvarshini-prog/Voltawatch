@@ -15,11 +15,13 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   app.useGlobalFilters(new GraphqlExceptionFilter());
 

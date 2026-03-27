@@ -21,15 +21,15 @@ export class TelemetryService {
   async findByCarId(carId: string, limit: number): Promise<TelemetryEntity[]> {
     const result = await this.pool.query(
       'SELECT * FROM telemetry_readings WHERE car_id = $1 ORDER BY timestamp DESC LIMIT $2',
-      [carId, limit]
+      [carId, limit],
     );
-    return result.rows.map(row => this.mapToTelemetry(row));
+    return result.rows.map((row) => this.mapToTelemetry(row));
   }
 
   async findLatest(carId: string): Promise<TelemetryEntity | null> {
     const result = await this.pool.query(
       'SELECT * FROM telemetry_readings WHERE car_id = $1 ORDER BY timestamp DESC LIMIT 1',
-      [carId]
+      [carId],
     );
     return result.rows[0] ? this.mapToTelemetry(result.rows[0]) : null;
   }
@@ -39,7 +39,7 @@ export class TelemetryService {
       `SELECT DISTINCT ON (car_id) * FROM telemetry_readings
        WHERE car_id = ANY($1)
        ORDER BY car_id, timestamp DESC`,
-      [carIds]
+      [carIds],
     );
     const map = new Map<string, TelemetryEntity>();
     for (const row of result.rows) {
@@ -56,9 +56,8 @@ export class TelemetryService {
       this.logger.warn(`Anomalies detected for car ${input.carId}: ${detectedFaults.join(', ')}`);
     }
 
-    const faultCodesArray = input.faultCodes && input.faultCodes.length > 0
-      ? `{${input.faultCodes.join(',')}}`
-      : '{}';
+    const faultCodesArray =
+      input.faultCodes && input.faultCodes.length > 0 ? `{${input.faultCodes.join(',')}}` : '{}';
 
     const result = await this.pool.query(
       `INSERT INTO telemetry_readings (
@@ -82,12 +81,22 @@ export class TelemetryService {
          charging_power_kw = EXCLUDED.charging_power_kw
        RETURNING *`,
       [
-        input.carId, input.timestamp, input.batteryVoltage, input.batteryPercentage,
-        input.batteryTempCelsius, input.motorTempCelsius, input.rpm,
-        input.cabinTempCelsius, input.currentMileage, input.speedKmh,
-        input.latitude, input.longitude, faultCodesArray,
-        input.isCharging, input.chargingPowerKw ?? null,
-      ]
+        input.carId,
+        input.timestamp,
+        input.batteryVoltage,
+        input.batteryPercentage,
+        input.batteryTempCelsius,
+        input.motorTempCelsius,
+        input.rpm,
+        input.cabinTempCelsius,
+        input.currentMileage,
+        input.speedKmh,
+        input.latitude,
+        input.longitude,
+        faultCodesArray,
+        input.isCharging,
+        input.chargingPowerKw ?? null,
+      ],
     );
 
     const entity = this.mapToTelemetry(result.rows[0]);
@@ -110,11 +119,15 @@ export class TelemetryService {
         try {
           const input = readings[i];
           const detectedFaults = this.anomalyDetection.detectFaults(input);
-          input.faultCodes = this.anomalyDetection.mergeWithExisting(detectedFaults, input.faultCodes);
+          input.faultCodes = this.anomalyDetection.mergeWithExisting(
+            detectedFaults,
+            input.faultCodes,
+          );
 
-          const faultCodesArray = input.faultCodes && input.faultCodes.length > 0
-            ? `{${input.faultCodes.join(',')}}`
-            : '{}';
+          const faultCodesArray =
+            input.faultCodes && input.faultCodes.length > 0
+              ? `{${input.faultCodes.join(',')}}`
+              : '{}';
 
           await client.query(
             `INSERT INTO telemetry_readings (
@@ -137,12 +150,22 @@ export class TelemetryService {
                is_charging = EXCLUDED.is_charging,
                charging_power_kw = EXCLUDED.charging_power_kw`,
             [
-              input.carId, input.timestamp, input.batteryVoltage, input.batteryPercentage,
-              input.batteryTempCelsius, input.motorTempCelsius, input.rpm,
-              input.cabinTempCelsius, input.currentMileage, input.speedKmh,
-              input.latitude, input.longitude, faultCodesArray,
-              input.isCharging, input.chargingPowerKw ?? null,
-            ]
+              input.carId,
+              input.timestamp,
+              input.batteryVoltage,
+              input.batteryPercentage,
+              input.batteryTempCelsius,
+              input.motorTempCelsius,
+              input.rpm,
+              input.cabinTempCelsius,
+              input.currentMileage,
+              input.speedKmh,
+              input.latitude,
+              input.longitude,
+              faultCodesArray,
+              input.isCharging,
+              input.chargingPowerKw ?? null,
+            ],
           );
 
           result.accepted++;
@@ -186,7 +209,10 @@ export class TelemetryService {
       faultCodes: Array.isArray(row.fault_codes)
         ? row.fault_codes
         : typeof row.fault_codes === 'string'
-          ? row.fault_codes.replace(/^\{|\}$/g, '').split(',').filter(Boolean)
+          ? row.fault_codes
+              .replace(/^\{|\}$/g, '')
+              .split(',')
+              .filter(Boolean)
           : [],
       isCharging: row.is_charging,
       chargingPowerKw: row.charging_power_kw ? parseFloat(row.charging_power_kw) : null,

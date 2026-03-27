@@ -54,8 +54,9 @@ describe('AuthService', () => {
     it('should throw ConflictException if email exists', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'existing' }] });
 
-      await expect(service.register('test@test.com', 'password123', 'Test'))
-        .rejects.toThrow(ConflictException);
+      await expect(service.register('test@test.com', 'password123', 'Test')).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -75,8 +76,7 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException for invalid credentials', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-      await expect(service.login('test@test.com', 'wrong'))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(service.login('test@test.com', 'wrong')).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException for wrong password', async () => {
@@ -85,8 +85,7 @@ describe('AuthService', () => {
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login('test@test.com', 'wrong'))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(service.login('test@test.com', 'wrong')).rejects.toThrow(UnauthorizedException);
     });
   });
 
@@ -107,8 +106,7 @@ describe('AuthService', () => {
         throw new Error('invalid');
       });
 
-      await expect(service.refresh('invalid-token'))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('invalid-token')).rejects.toThrow(UnauthorizedException);
     });
   });
 });

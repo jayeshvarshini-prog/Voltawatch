@@ -23,7 +23,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     throw new Error(message);
   }
   const text = await res.text();
-  return text ? JSON.parse(text) as T : undefined as unknown as T;
+  return text ? (JSON.parse(text) as T) : (undefined as unknown as T);
 }
 
 export interface AuthUser {
@@ -78,6 +78,5 @@ export const carsApi = {
     request<Car>('/api/cars', { method: 'POST', body: JSON.stringify(input) }),
   update: (id: string, input: Partial<CreateCarInput>) =>
     request<Car>(`/api/cars/${id}`, { method: 'PUT', body: JSON.stringify(input) }),
-  delete: (id: string) =>
-    request<void>(`/api/cars/${id}`, { method: 'DELETE' }),
+  delete: (id: string) => request<void>(`/api/cars/${id}`, { method: 'DELETE' }),
 };

@@ -8,10 +8,7 @@ export class TelemetryController {
   constructor(private readonly telemetryService: TelemetryService) {}
 
   @Get(':carId')
-  async getTelemetry(
-    @Param('carId') carId: string,
-    @Query('limit') limit?: number,
-  ) {
+  async getTelemetry(@Param('carId') carId: string, @Query('limit') limit?: number) {
     return this.telemetryService.getTelemetry(carId, limit ? parseInt(String(limit), 10) : 100);
   }
 

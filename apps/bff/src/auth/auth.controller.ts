@@ -5,8 +5,10 @@ import { RegisterDto } from './dto/register.dto';
 
 function toHttpException(err: unknown): never {
   const message = err instanceof Error ? err.message : 'An error occurred';
-  if (/invalid credentials/i.test(message)) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-  if (/already registered|already exists|conflict/i.test(message)) throw new HttpException(message, HttpStatus.CONFLICT);
+  if (/invalid credentials/i.test(message))
+    throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+  if (/already registered|already exists|conflict/i.test(message))
+    throw new HttpException(message, HttpStatus.CONFLICT);
   if (/not found/i.test(message)) throw new HttpException(message, HttpStatus.NOT_FOUND);
   throw new HttpException(message, HttpStatus.BAD_REQUEST);
 }
