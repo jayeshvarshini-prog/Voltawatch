@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '../src/app.module';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GqlRes = { body: { data: any; errors?: unknown[] } };
 
 describe('App E2E Tests', () => {
   let app: INestApplication;
@@ -13,11 +16,13 @@ describe('App E2E Tests', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
     await app.init();
   });
 
@@ -31,7 +36,7 @@ describe('App E2E Tests', () => {
         .post('/graphql')
         .send({ query: '{ health { status database uptime timestamp } }' })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.data.health.status).toBe('ok');
           expect(res.body.data.health.database).toBeDefined();
         });
@@ -54,7 +59,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.data.register.accessToken).toBeDefined();
           expect(res.body.data.register.user.email).toBe(testEmail);
           accessToken = res.body.data.register.accessToken;
@@ -73,7 +78,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.data.login.accessToken).toBeDefined();
           expect(res.body.data.login.user.email).toBe(testEmail);
         });
@@ -90,7 +95,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.errors).toBeDefined();
         });
     });
@@ -117,7 +122,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.data.registerCar.vin).toBe('1HGBH41JXMN109186');
           carId = res.body.data.registerCar.id;
         });
@@ -128,7 +133,7 @@ describe('App E2E Tests', () => {
         .post('/graphql')
         .send({ query: '{ cars { id vin model } }' })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(Array.isArray(res.body.data.cars)).toBe(true);
         });
     });
@@ -148,7 +153,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.errors).toBeDefined();
         });
     });
@@ -179,7 +184,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.errors).toBeDefined();
         });
     });
@@ -208,7 +213,7 @@ describe('App E2E Tests', () => {
           }`,
         })
         .expect(200)
-        .expect((res) => {
+        .expect((res: GqlRes) => {
           expect(res.body.errors).toBeDefined();
         });
     });

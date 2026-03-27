@@ -3,9 +3,10 @@ import { IsString, IsInt, IsOptional, Min, Max, Length, IsUUID, IsNumber } from 
 
 @InputType()
 export class CreateCarInput {
-  @Field()
+  @Field({ nullable: true })
   @IsUUID()
-  ownerId!: string;
+  @IsOptional()
+  ownerId?: string;
 
   @Field()
   @IsString()
