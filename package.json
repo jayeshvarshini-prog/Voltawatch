@@ -1,0 +1,38 @@
+{
+  "name": "voltawatch",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:bff": "npm run dev --workspace=apps/bff",
+    "dev:simulator": "npm run start --workspace=apps/simulator",
+    "dev:dashboard": "npm run dev --workspace=apps/dashboard",
+    "dev:settings": "npm run dev --workspace=apps/settings",
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:bff\"",
+    "dev:frontend": "concurrently \"npm:dev:dashboard\" \"npm:dev:settings\"",
+    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:bff\" \"npm:dev:dashboard\" \"npm:dev:settings\"",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\"",
+    "lint:fix": "eslint \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\" --fix",
+    "format": "prettier --write \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\"",
+    "format:check": "prettier --check \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\"",
+    "db:migrate": "psql $DATABASE_URL -f database/schema.sql",
+    "db:seed": "psql $DATABASE_URL -f database/seed.sql",
+    "db:migrate:001": "psql $DATABASE_URL -f database/migrations/001_add_password_hash.sql"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  }
+}

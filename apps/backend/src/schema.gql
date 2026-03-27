@@ -1,0 +1,149 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String!
+  user: UserEntity!
+}
+
+type BatchError {
+  index: Int!
+  message: String!
+}
+
+type BatchResult {
+  accepted: Int!
+  errors: [BatchError!]!
+  rejected: Int!
+}
+
+input BatchTelemetryInput {
+  readings: [CreateTelemetryInput!]!
+}
+
+type CarEntity {
+  batteryHealthPercentage: Float!
+  createdAt: DateTime!
+  currentMileage: Int!
+  estimatedRangeKm: Int!
+  id: ID!
+  lastServiceDate: DateTime
+  model: String!
+  ownerId: String!
+  updatedAt: DateTime!
+  vin: String!
+  year: Int!
+}
+
+input CreateCarInput {
+  batteryHealthPercentage: Float! = 100
+  currentMileage: Int!
+  estimatedRangeKm: Int!
+  model: String!
+  ownerId: String!
+  vin: String!
+  year: Int!
+}
+
+input CreateTelemetryInput {
+  batteryPercentage: Float!
+  batteryTempCelsius: Float!
+  batteryVoltage: Float!
+  cabinTempCelsius: Float!
+  carId: String!
+  chargingPowerKw: Float
+  currentMileage: Int!
+  faultCodes: [String!]! = []
+  isCharging: Boolean!
+  latitude: Float!
+  longitude: Float!
+  motorTempCelsius: Float!
+  rpm: Int!
+  speedKmh: Float!
+  timestamp: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type HealthStatus {
+  database: String!
+  status: String!
+  timestamp: DateTime!
+  uptime: Float!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  batchUpsertReadings(input: BatchTelemetryInput!): BatchResult!
+  deleteCar(id: String!): Boolean!
+  login(input: LoginInput!): AuthResponse!
+  refreshToken(token: String!): AuthResponse!
+  register(input: RegisterInput!): AuthResponse!
+  registerCar(input: CreateCarInput!): CarEntity!
+  updateCar(id: String!, input: UpdateCarInput!): CarEntity
+  upsertReading(input: CreateTelemetryInput!): TelemetryEntity!
+}
+
+type Query {
+  car(id: String!): CarEntity
+  cars: [CarEntity!]!
+  health: HealthStatus!
+  latestReading(carId: String!): TelemetryEntity
+  telemetry(carId: String!, limit: Float! = 100): [TelemetryEntity!]!
+}
+
+input RegisterInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+type Subscription {
+  liveTelemetry(carId: String!): TelemetryEntity!
+}
+
+type TelemetryEntity {
+  batteryPercentage: Float!
+  batteryTempCelsius: Float!
+  batteryVoltage: Float!
+  cabinTempCelsius: Float!
+  carId: String!
+  chargingPowerKw: Float
+  createdAt: DateTime!
+  currentMileage: Int!
+  faultCodes: [String!]!
+  id: ID!
+  isCharging: Boolean!
+  latitude: Float!
+  longitude: Float!
+  motorTempCelsius: Float!
+  rpm: Int!
+  speedKmh: Float!
+  timestamp: DateTime!
+}
+
+input UpdateCarInput {
+  batteryHealthPercentage: Float = 100
+  currentMileage: Int
+  estimatedRangeKm: Int
+  lastServiceDate: DateTime
+  model: String
+  ownerId: String
+  vin: String
+  year: Int
+}
+
+type UserEntity {
+  email: String!
+  id: String!
+  name: String!
+}

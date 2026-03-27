@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: voltawatch-db
+    restart: always
+    environment:
+      POSTGRES_USER: voltawatch
+      POSTGRES_PASSWORD: voltawatch123
+      POSTGRES_DB: voltawatch
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voltawatch"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: voltawatch-backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://voltawatch:voltawatch123@postgres:5432/voltawatch
+      JWT_SECRET: voltawatch-dev-secret
+      JWT_REFRESH_SECRET: voltawatch-refresh-secret
+      PORT: "5000"
+      NODE_ENV: production
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  bff:
+    build:
+      context: .
+      dockerfile: apps/bff/Dockerfile
+    container_name: voltawatch-bff
+    restart: always
+    environment:
+      GRAPHQL_ENDPOINT: http://backend:5000/graphql
+      JWT_SECRET: voltawatch-dev-secret
+      BFF_PORT: "3000"
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
