@@ -1,4 +1,4 @@
-import { Injectable, Inject, Scope } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import DataLoader from 'dataloader';
 import { TelemetryEntity } from './entities/telemetry.entity';
 import { TelemetryService } from './telemetry.service';
@@ -10,7 +10,7 @@ export class TelemetryLoader {
   constructor(private readonly telemetryService: TelemetryService) {
     this.latestByCarId = new DataLoader<string, TelemetryEntity | null>(async (carIds) => {
       const map = await this.telemetryService.findLatestByCarIds(carIds as string[]);
-      return carIds.map(id => map.get(id) ?? null);
+      return carIds.map((id) => map.get(id) ?? null);
     });
   }
 }

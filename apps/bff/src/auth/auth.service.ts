@@ -7,7 +7,11 @@ const LOGIN_MUTATION = gql`
     login(input: $input) {
       accessToken
       refreshToken
-      user { id email name }
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;
@@ -17,7 +21,11 @@ const REGISTER_MUTATION = gql`
     register(input: $input) {
       accessToken
       refreshToken
-      user { id email name }
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;
@@ -27,7 +35,11 @@ const REFRESH_MUTATION = gql`
     refreshToken(token: $token) {
       accessToken
       refreshToken
-      user { id email name }
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;

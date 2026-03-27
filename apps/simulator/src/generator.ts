@@ -10,11 +10,11 @@ interface CarState {
 const carStates = new Map<string, CarState>();
 
 const startLocations = [
-  { lat: 37.7749, lng: -122.4194 },  // San Francisco
-  { lat: 34.0522, lng: -118.2437 },  // Los Angeles
-  { lat: 40.7128, lng: -74.0060 },   // New York
-  { lat: 47.6062, lng: -122.3321 },  // Seattle
-  { lat: 39.7392, lng: -104.9903 },  // Denver
+  { lat: 37.7749, lng: -122.4194 }, // San Francisco
+  { lat: 34.0522, lng: -118.2437 }, // Los Angeles
+  { lat: 40.7128, lng: -74.006 }, // New York
+  { lat: 47.6062, lng: -122.3321 }, // Seattle
+  { lat: 39.7392, lng: -104.9903 }, // Denver
 ];
 
 function initState(carIndex: number): CarState {
@@ -77,9 +77,7 @@ export function generateReading(carId: string, carIndex: number) {
   const isDriving = state.phase === 'driving';
   const isCharging = state.phase === 'charging';
 
-  const motorTemp = isDriving
-    ? 55 + Math.random() * 30
-    : 25 + Math.random() * 10;
+  const motorTemp = isDriving ? 55 + Math.random() * 30 : 25 + Math.random() * 10;
 
   return {
     carId,

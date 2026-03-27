@@ -99,11 +99,7 @@ export class TelemetryService {
   }
 
   async upsertReading(input: any, token: string) {
-    const data = await this.graphqlClient.mutateWithAuth(
-      UPSERT_READING_MUTATION,
-      { input },
-      token,
-    );
+    const data = await this.graphqlClient.mutateWithAuth(UPSERT_READING_MUTATION, { input }, token);
     return data.upsertReading;
   }
 

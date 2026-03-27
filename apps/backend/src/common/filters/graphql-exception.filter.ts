@@ -7,19 +7,15 @@ export class GraphqlExceptionFilter implements GqlExceptionFilter {
   catch(exception: unknown, _host: ArgumentsHost) {
     if (exception instanceof HttpException) {
       const response = exception.getResponse();
-      const message = typeof response === 'string'
-        ? response
-        : (response as any).message || exception.message;
+      const message =
+        typeof response === 'string' ? response : (response as any).message || exception.message;
 
-      return new GraphQLError(
-        Array.isArray(message) ? message.join('; ') : message,
-        {
-          extensions: {
-            code: this.mapStatusToCode(exception.getStatus()),
-            statusCode: exception.getStatus(),
-          },
+      return new GraphQLError(Array.isArray(message) ? message.join('; ') : message, {
+        extensions: {
+          code: this.mapStatusToCode(exception.getStatus()),
+          statusCode: exception.getStatus(),
         },
-      );
+      });
     }
 
     if (exception instanceof Error) {

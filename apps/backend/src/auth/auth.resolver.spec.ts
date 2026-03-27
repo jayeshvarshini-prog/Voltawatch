@@ -38,7 +38,11 @@ describe('AuthResolver', () => {
   });
 
   it('should delegate register to AuthService', async () => {
-    const result = await resolver.register({ email: 'test@test.com', password: 'password123', name: 'Test' });
+    const result = await resolver.register({
+      email: 'test@test.com',
+      password: 'password123',
+      name: 'Test',
+    });
     expect(authService.register).toHaveBeenCalledWith('test@test.com', 'password123', 'Test');
     expect(result).toEqual(mockAuthResponse);
   });

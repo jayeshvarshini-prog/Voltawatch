@@ -109,7 +109,9 @@ describe('TelemetryService', () => {
     });
 
     it('should auto-inject fault codes for anomalies', async () => {
-      mockPool.query.mockResolvedValue({ rows: [{ ...mockTelemetryRow, fault_codes: ['OVERHEAT'] }] });
+      mockPool.query.mockResolvedValue({
+        rows: [{ ...mockTelemetryRow, fault_codes: ['OVERHEAT'] }],
+      });
 
       const input = {
         carId: 'car-1',

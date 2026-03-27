@@ -18,8 +18,6 @@ import { LoggingModule } from './common/logging/logging.module';
     TelemetryModule,
     HealthModule,
   ],
-  providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-  ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

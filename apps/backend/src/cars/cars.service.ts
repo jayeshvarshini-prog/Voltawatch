@@ -10,17 +10,12 @@ export class CarsService {
   constructor(@Inject(DATABASE_POOL) private readonly pool: Pool) {}
 
   async findAll(): Promise<CarEntity[]> {
-    const result = await this.pool.query(
-      'SELECT * FROM cars ORDER BY created_at DESC'
-    );
-    return result.rows.map(row => this.mapToCar(row));
+    const result = await this.pool.query('SELECT * FROM cars ORDER BY created_at DESC');
+    return result.rows.map((row) => this.mapToCar(row));
   }
 
   async findOne(id: string): Promise<CarEntity | null> {
-    const result = await this.pool.query(
-      'SELECT * FROM cars WHERE id = $1',
-      [id]
-    );
+    const result = await this.pool.query('SELECT * FROM cars WHERE id = $1', [id]);
     return result.rows[0] ? this.mapToCar(result.rows[0]) : null;
   }
 
@@ -29,8 +24,15 @@ export class CarsService {
       `INSERT INTO cars (owner_id, vin, model, year, current_mileage, battery_health_percentage, estimated_range_km)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [input.ownerId, input.vin, input.model, input.year, input.currentMileage,
-       input.batteryHealthPercentage ?? 100, input.estimatedRangeKm]
+      [
+        input.ownerId,
+        input.vin,
+        input.model,
+        input.year,
+        input.currentMileage,
+        input.batteryHealthPercentage ?? 100,
+        input.estimatedRangeKm,
+      ],
     );
     return this.mapToCar(result.rows[0]);
   }
@@ -62,7 +64,7 @@ export class CarsService {
     values.push(id);
     const result = await this.pool.query(
       `UPDATE cars SET ${fields.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
-      values
+      values,
     );
     return result.rows[0] ? this.mapToCar(result.rows[0]) : null;
   }

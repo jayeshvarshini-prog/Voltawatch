@@ -21,10 +21,22 @@ interface AuthenticatedSocket extends WebSocket {
 const UPSERT_READING_MUTATION = gql`
   mutation UpsertReading($input: CreateTelemetryInput!) {
     upsertReading(input: $input) {
-      id carId timestamp batteryVoltage batteryPercentage
-      batteryTempCelsius motorTempCelsius rpm cabinTempCelsius
-      currentMileage speedKmh latitude longitude faultCodes
-      isCharging chargingPowerKw
+      id
+      carId
+      timestamp
+      batteryVoltage
+      batteryPercentage
+      batteryTempCelsius
+      motorTempCelsius
+      rpm
+      cabinTempCelsius
+      currentMileage
+      speedKmh
+      latitude
+      longitude
+      faultCodes
+      isCharging
+      chargingPowerKw
     }
   }
 `;
@@ -71,7 +83,9 @@ export class TelemetryGateway implements OnGatewayConnection, OnGatewayDisconnec
       client.send(JSON.stringify({ event: 'auth', data: { status: 'authenticated' } }));
       this.logger.log(`WebSocket client authenticated: ${payload.sub}`);
     } catch {
-      client.send(JSON.stringify({ event: 'auth', data: { status: 'error', message: 'Invalid token' } }));
+      client.send(
+        JSON.stringify({ event: 'auth', data: { status: 'error', message: 'Invalid token' } }),
+      );
       client.close();
     }
   }
@@ -90,10 +104,7 @@ export class TelemetryGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage('telemetry')
-  async handleTelemetry(
-    @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: any,
-  ) {
+  async handleTelemetry(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: any) {
     if (!client.userId) {
       return { event: 'error', data: { message: 'Not authenticated' } };
     }

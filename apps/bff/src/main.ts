@@ -13,10 +13,12 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
 
   app.enableCors({
     origin: ['http://localhost:8080', 'http://localhost:8081'],
